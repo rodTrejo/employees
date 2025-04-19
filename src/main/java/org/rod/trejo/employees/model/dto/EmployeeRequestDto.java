@@ -51,7 +51,7 @@ public record EmployeeRequestDto(
     String position,
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    @Schema(description = ConstantsEmployeeApi.OPTIONAL_ERROR_MESSAGE, hidden = false)
+    @Schema(description = ConstantsEmployeeApi.OPTIONAL_ERROR_MESSAGE, hidden = true)
     String errorMessage
 ) {
 }

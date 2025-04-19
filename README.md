@@ -51,6 +51,19 @@ http://localhost:8080/swagger-ui.html
 
 ---
 
+## Herramientas de Análisis de Calidad
+
+Este proyecto utiliza varias herramientas para asegurar la calidad del código:
+
+- **SpotBugs**: Detecta errores comunes en el código.
+- **Checkstyle**: Verifica las convenciones de estilo y formato.
+- **CPD**: Encuentra código duplicado para mejorar la mantenibilidad.
+- **PMD**: Detecta patrones de código problemáticos.
+- **JaCoCo**: Mide la cobertura de pruebas para asegurar que el código esté bien probado.
+- **Dependency-Check**: Revisa las dependencias en busca de vulnerabilidades de seguridad.
+
+Estas herramientas ayudan a mantener un código limpio, eficiente y seguro a lo largo del proyecto.
+
 ## Reportes de calidad de código
 
 Se puede compilar y generar reportes de calidad de código usando:

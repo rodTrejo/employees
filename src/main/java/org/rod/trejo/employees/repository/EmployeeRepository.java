@@ -7,6 +7,7 @@
 package org.rod.trejo.employees.repository;
 
 import java.util.List;
+import java.util.Optional;
 import org.rod.trejo.employees.model.EmployeeCollection;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
@@ -19,4 +20,5 @@ public interface EmployeeRepository extends MongoRepository<EmployeeCollection, 
 
   List<EmployeeCollection> findAllByActiveTrue();
 
+  Optional<EmployeeCollection> findByIdAndActiveTrue(String id);
 }

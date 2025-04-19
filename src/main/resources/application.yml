@@ -1,5 +1,5 @@
 server:
-  port: 80
+  port: 8080
 
 spring:
   application:
@@ -7,7 +7,7 @@ spring:
 
   data:
     mongodb:
-      uri: ${MONGODB_URI:mongodb://mongo:mongo@localhost:27017/empleados?authSource=admin}
+      uri: ${MONGODB_URI:mongodb://mongo:mongo@localhost:27017/employees?authSource=admin}
 
 api:
   base-path: ${EMPLOYEE_API_BASE_PATH:/api/v1/employees}

@@ -14,7 +14,7 @@
 	<name>employees</name>
 	<description>Demo project for employees</description>
 
-	<url>https://github.com/rodTrejo/tu-proyecto</url>
+	<url>https://github.com/rodTrejo/employees</url>
 
 	<licenses>
 		<license>
@@ -30,15 +30,15 @@
 			<name>Rodrigo Noe Trejo Guerra</name>
 			<email>rodrigo.noe@hotmail.com</email>
 			<organization>Personal Project</organization>
-			<organizationUrl>https://github.com/rodTrejo</organizationUrl>
+			<organizationUrl>https://github.com/rodTrejo/employees</organizationUrl>
 		</developer>
 	</developers>
 
 	<scm>
-		<connection>scm:git:git://github.com/rodTrejo/tu-proyecto.git</connection>
-		<developerConnection>scm:git:ssh://git@github.com/rodTrejo/tu-proyecto.git</developerConnection>
+		<connection>scm:git:git://github.com/rodTrejo/employees.git</connection>
+		<developerConnection>scm:git:ssh://git@github.com/rodTrejo/employees.git</developerConnection>
 		<tag>HEAD</tag>
-		<url>https://github.com/rodTrejo/tu-proyecto</url>
+		<url>https://github.com/rodTrejo/employees</url>
 	</scm>
 
 	<properties>
@@ -51,6 +51,7 @@
 		<jacoco.maven.plugin.version>0.8.12</jacoco.maven.plugin.version>
 		<dependency-check-maven.version>12.1.0</dependency-check-maven.version>
 		<maven-site-plugin.version>4.0.0-M16</maven-site-plugin.version>
+		<javax.persistence-api.version>2.2</javax.persistence-api.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -101,7 +102,7 @@
 		<dependency>
 			<groupId>javax.persistence</groupId>
 			<artifactId>javax.persistence-api</artifactId>
-			<version>2.2</version>
+			<version>${javax.persistence-api.version}</version>
 		</dependency>
 	</dependencies>
 

@@ -79,7 +79,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     Optional.ofNullable(idEmployee).filter(validIdEmployee())
         .map(validId ->
-            employeeRepository.findById(validId)
+            employeeRepository.findByIdAndActiveTrue(validId)
                 .map(existingEmployee -> {
 
                   existingEmployee.setActive(Constants.INACTIVE_EMPLOYEE);
@@ -111,7 +111,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     return Optional.of(idEmployee)
         .filter(validIdEmployee())
-        .map(id -> employeeRepository.findById(id)
+        .map(id -> employeeRepository.findByIdAndActiveTrue(id)
             .map(existingEmployee -> {
 
               EmployeeMapperUtil.mapRequestToEmployee(existingEmployee, employeeRequest);
@@ -216,7 +216,7 @@ public class EmployeeServiceImpl implements EmployeeService {
    * @return the optional
    */
   private Optional<String> validateEmployeeAge(LocalDate birthDate) {
-    if (Objects.isNull(birthDate)){
+    if (Objects.isNull(birthDate)) {
       return Optional.of(employeeProperties.getMessageErrorAgeValid());
     }
 

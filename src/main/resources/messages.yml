@@ -19,6 +19,10 @@ exception:
         code: 415
         type: UNSUPPORTED_MEDIA_TYPE
         message: Unsupported Media Type.
+    HttpMessageNotReadableException:
+        code: 400
+        type: BAD_REQUEST
+        message: Required request body is missing.
     EmployeeException:
         code: 400
         type: BAD_REQUEST

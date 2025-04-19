@@ -1,0 +1,30 @@
+
+services:
+  mongo:
+    image: mongo:6
+    container_name: mongo-employees
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: mongo
+      MONGO_INITDB_ROOT_PASSWORD: mongo
+    networks:
+      - employees-network
+
+  employees-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: employees-app
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATA_MONGODB_URI: mongodb://mongo:mongo@mongo:27017/employees?authSource=admin
+    depends_on:
+      - mongo
+    networks:
+      - employees-network
+
+networks:
+  employees-network:
+    driver: bridge

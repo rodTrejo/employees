@@ -112,14 +112,14 @@ class EmployeeServiceTest {
   void deleteEmployeeSuccessfully() {
     EmployeeCollection expectedEmployeeToSave = DtoUtil.createEmployeeCollection();
     expectedEmployeeToSave.setActive(false);
-    Mockito.when(employeeRepository.findById(employeeId))
+    Mockito.when(employeeRepository.findByIdAndActiveTrue(employeeId))
         .thenReturn(Optional.of(DtoUtil.createEmployeeCollection()));
     Mockito.when(employeeRepository.save(Mockito.any(EmployeeCollection.class)))
         .thenAnswer(i -> i.getArgument(0));
 
     employeeService.deleteEmployee(employeeId);
     Mockito.verify(employeeRepository).save(expectedEmployeeToSave);
-    Mockito.verify(employeeRepository).findById(employeeId);
+    Mockito.verify(employeeRepository).findByIdAndActiveTrue(employeeId);
   }
 
   /**
@@ -127,7 +127,7 @@ class EmployeeServiceTest {
    */
   @Test
   void deleteEmployeeDoesNotExist() {
-    Mockito.when(employeeRepository.findById(employeeId)).thenReturn(Optional.empty());
+    Mockito.when(employeeRepository.findByIdAndActiveTrue(employeeId)).thenReturn(Optional.empty());
 
     EmployeeNotFoundException exception = Assertions.assertThrows(
         EmployeeNotFoundException.class,
@@ -136,7 +136,7 @@ class EmployeeServiceTest {
 
     Assertions.assertEquals(ConstantsError.EMPLOYEE_NOT_FOUND, exception.getMessage());
 
-    Mockito.verify(employeeRepository).findById(employeeId);
+    Mockito.verify(employeeRepository).findByIdAndActiveTrue(employeeId);
     Mockito.verify(employeeRepository, Mockito.never()).save(Mockito.any());
   }
 
@@ -152,7 +152,7 @@ class EmployeeServiceTest {
     EmployeeResponseDto expectedResponse =
         EmployeeMapperUtil.mapToEmployeeResponseDto(updatedEmployee);
 
-    Mockito.when(employeeRepository.findById(employeeId))
+    Mockito.when(employeeRepository.findByIdAndActiveTrue(employeeId))
         .thenReturn(Optional.of(existingEmployee));
     Mockito.when(employeeRepository.save(Mockito.any(EmployeeCollection.class)))
         .thenAnswer(invocation -> invocation.getArgument(0));
@@ -161,7 +161,7 @@ class EmployeeServiceTest {
 
     Assertions.assertNotNull(actualResponse);
     Assertions.assertEquals(expectedResponse.firstName(), actualResponse.firstName());
-    Mockito.verify(employeeRepository).findById(employeeId);
+    Mockito.verify(employeeRepository).findByIdAndActiveTrue(employeeId);
     Mockito.verify(employeeRepository).save(Mockito.any(EmployeeCollection.class));
   }
 
@@ -186,7 +186,7 @@ class EmployeeServiceTest {
           employeeService.updateEmployee(employeeId, DtoUtil.createEmployeeRequestDto());
         });
     Assertions.assertEquals(ConstantsError.EMPLOYEE_NOT_FOUND, exception.getMessage());
-    Mockito.verify(employeeRepository).findById(employeeId);
+    Mockito.verify(employeeRepository).findByIdAndActiveTrue(employeeId);
     Mockito.verify(employeeRepository, Mockito.never()).save(Mockito.any());
 
   }
