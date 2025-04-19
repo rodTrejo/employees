@@ -118,9 +118,7 @@ docker-compose up --build
 
 El proyecto incluye una colección de Postman para probar fácilmente los endpoints. Puedes importarla desde el archivo:
 
-```bash
-/EmployeesRod.postman_collection.json
-```
+Collection: [EmployeesRod.postman_collection.json](https://github.com/rodTrejo/employees/blob/main/EmployeesRod.postman_collection.json)
 
 ---
 
