@@ -1,0 +1,33 @@
+server:
+  port: 80
+
+spring:
+  application:
+    name: employees
+
+  data:
+    mongodb:
+      uri: ${MONGODB_URI:mongodb://mongo:mongo@localhost:27017/empleados?authSource=admin}
+
+api:
+  base-path: ${EMPLOYEE_API_BASE_PATH:/api/v1/employees}
+
+employee:
+  age:
+    minimum: ${EMPLOYEE_AGE_MIN:18}
+    maximum: ${EMPLOYEE_AGE_MAX:99}
+    msg: Age must be between {0} and {1} years old
+
+logging:
+  level:
+    root: ${LOG_ROOT_LEVEL:INFO}
+    rod:
+      trejo: ${LOG_ROD_TREJO_LEVEL:INFO}
+
+management:
+  endpoints:
+    web:
+      base-path: /actuator
+      exposure:
+        include: health, env, info, scheduledtask
+

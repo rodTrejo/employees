@@ -1,0 +1,57 @@
+exception:
+    NoResourceFoundException:
+        code: 404
+        type: NOT_FOUND
+        message: Resource not found.
+    DecodingException:
+        code: 400
+        type: BAD_REQUEST
+        message: Invalid request body.
+    MethodArgumentNotValidException:
+        code: 400
+        type: BAD_REQUEST
+        message: Invalid request parameters.
+    MethodNotAllowedException:
+        code: 405
+        type: METHOD_NOT_ALLOWED
+        message: Method not allowed.
+    HttpMediaTypeNotSupportedException:
+        code: 415
+        type: UNSUPPORTED_MEDIA_TYPE
+        message: Unsupported Media Type.
+    EmployeeException:
+        code: 400
+        type: BAD_REQUEST
+        message: Invalid input provided.
+    EmployeeNotFoundException:
+        code: 404
+        type: NOT_FOUND
+        message: Employee not found.
+    MongoException:
+        code: 500
+        type: INTERNAL_SERVER_ERROR
+        message: Data source is currently unavailable.
+
+
+firstName:
+    notblank: First name is required
+    size: First name must be between {min} and {max} characters long
+
+middleName:
+    size: Middle name must be at most {max} characters long
+
+lastName:
+    notblank: Last name is required
+    size: Last name must be at most {max} characters long
+
+secondLastName:
+    size: Second last name must be at most {max} characters long
+
+gender:
+    notnull: Gender is required
+
+birthDate:
+    notnull: Birth date is required
+
+position:
+    notblank: Position is required
