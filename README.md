@@ -1,6 +1,6 @@
 # Employees API
 
-**Employees API** es un servicio REST desarrollado en **Java 21** con **Spring Boot**, enfocado en la **gestión de empleados**. Utiliza **MongoDB** como base de datos, incluye reglas de validación configurables, y ofrece generación de reportes de calidad de código. Además, cuenta con una interfaz de documentación **Swagger UI**.
+**Employees API** es un servicio REST desarrollado en **Java 21** con **Spring Boot**, enfocado en la **gestión de empleados**. Utiliza **MongoDB** como base de datos, incluye reglas de validación configurables, eneración de reportes de calidad de código y documentación interactiva mediante **Swagger UI**.
 
 ---
 
@@ -21,7 +21,7 @@
 | Java 21                   | Lenguaje base        |
 | Spring Boot 3.x           | Framework principal  |
 | MongoDB 6.x               | Base de datos        |
-| Lombok                    | RReducción de Código Repetitivo |
+| Lombok                    | Reducción de Código Repetitivo |
 | Springdoc OpenAPI         | Documentación y pruebas de endpoints |
 
 ---
@@ -64,7 +64,6 @@ employees/target/site/index.html
 ---
 
 
-
 ### Levantar MongoDB en Docker
 
 Si no tienes MongoDB instalado, puedes levantarlo usando Docker con el siguiente comando:
@@ -87,6 +86,31 @@ Para correr el proyecto localmente, asegúrate de tener MongoDB activo y usa el 
 
 ---
 
+## Ejecución Docker
+
+Primero, construye el proyecto desde la raíz:
+
+```bash
+./mvnw clean package
+```
+Después, desde la misma raíz, ejecuta:
+
+```bash
+docker-compose up --build
+```
+
+---
+
+## Colección de Postman
+
+El proyecto incluye una colección de Postman para probar fácilmente los endpoints. Puedes importarla desde el archivo:
+
+```bash
+/EmployeesRod.postman_collection.json
+```
+
+---
+
 ## Autor
 
 Rodrigo Trejo  
@@ -96,4 +120,4 @@ GitHub: [https://github.com/rodTrejo](https://github.com/rodTrejo)
 
 ## Nota adicional
 
-Este proyecto forma parte de un sistema modular más amplio orientado a la administración interna de empleados, con un enfoque en la seguridad, validaciones robustas y buenas prácticas de desarrollo.
+Este proyecto forma parte de un sistema modular enfocado en la gestión interna de empleados. Está diseñado con un enfoque en buenas prácticas de desarrollo, validaciones sólidas y atención a la seguridad.
