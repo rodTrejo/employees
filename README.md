@@ -1,6 +1,6 @@
 # Employees API
 
-**Employees API** es un servicio REST desarrollado en **Java 21** con **Spring Boot**, enfocado en la **gestión de empleados**. Utiliza **MongoDB** como base de datos, incluye reglas de validación configurables, eneración de reportes de calidad de código y documentación interactiva mediante **Swagger UI**.
+**Employees API** es un servicio REST desarrollado en **Java 21** con **Spring Boot**, enfocado en la **gestión de empleados**. Utiliza **MongoDB** como base de datos, incluye reglas de validación configurables, generación de reportes de calidad de código y documentación interactiva mediante **Swagger UI**.
 
 ---
 
@@ -74,6 +74,10 @@ La primera vez puede tardar varios minutos. Cuando termine, abre el archivo inde
 ```bash
 employees/target/site/index.html
 ```
+Puedes encontrar un ejemplo de la visualización del reporte en el archivo index.xml dentro de la misma carpeta site.
+
+Reporte: [/site/index.html](https://github.com/rodTrejo/employees/blob/main/site/index.html)
+
 ---
 
 

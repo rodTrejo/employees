@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang=""><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>EmployeeServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">employees</a> &gt; <a href="index.source.html" class="el_package">org.rod.trejo.employees.service.impl</a> &gt; <span class="el_source">EmployeeServiceImpl.java</span></div><h1>EmployeeServiceImpl.java</h1><pre class="source lang-java linenums">/*
+ * Copyright (c) 2025. Rodrigo Noé Trejo Guerra.
+ * This software may be copied, modified, and distributed freely under the terms of the
+ * MIT license.
+ */
+
+package org.rod.trejo.employees.service.impl;
+
+import jakarta.validation.Validator;
+import java.time.LocalDate;
+import java.time.Period;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.function.Predicate;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.rod.trejo.employees.config.EmployeeProperties;
+import org.rod.trejo.employees.constant.Constants;
+import org.rod.trejo.employees.constant.ConstantsError;
+import org.rod.trejo.employees.constant.ConstantsLog;
+import org.rod.trejo.employees.exception.EmployeeException;
+import org.rod.trejo.employees.exception.EmployeeNotFoundException;
+import org.rod.trejo.employees.exception.EmployeeValidationException;
+import org.rod.trejo.employees.model.EmployeeCollection;
+import org.rod.trejo.employees.model.dto.EmployeeInsertResponseDto;
+import org.rod.trejo.employees.model.dto.EmployeeRequestDto;
+import org.rod.trejo.employees.model.dto.EmployeeResponseDto;
+import org.rod.trejo.employees.repository.EmployeeRepository;
+import org.rod.trejo.employees.service.EmployeeService;
+import org.rod.trejo.employees.util.EmployeeMapperUtil;
+import org.springframework.stereotype.Service;
+
+/**
+ * The Class EmployeeServiceImpl.
+ *
+ * @author rodTrejo.
+ */
+@Service
+@RequiredArgsConstructor
+<span class="fc" id="L42">@Slf4j</span>
+public class EmployeeServiceImpl implements EmployeeService {
+
+  /**
+   * The Employee repository.
+   */
+  private final EmployeeRepository employeeRepository;
+
+  /**
+   * The Validator.
+   */
+  private final Validator validator;
+
+  /**
+   * The Employee properties.
+   */
+  private final EmployeeProperties employeeProperties;
+
+
+  /**
+   * {@inheritDoc}
+   *
+   * @return the all employees
+   */
+  @Override
+  public List&lt;EmployeeResponseDto&gt; getAllEmployees() {
+<span class="fc" id="L68">    return employeeRepository.findAllByActiveTrue().stream()</span>
+<span class="fc" id="L69">        .map(EmployeeMapperUtil::mapToEmployeeResponseDto).toList();</span>
+  }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @param idEmployee the id employee
+   */
+  @Override
+  public void deleteEmployee(String idEmployee) {
+
+<span class="fc" id="L80">    Optional.ofNullable(idEmployee).filter(validIdEmployee())</span>
+<span class="fc" id="L81">        .map(validId -&gt;</span>
+<span class="fc" id="L82">            employeeRepository.findByIdAndActiveTrue(validId)</span>
+<span class="fc" id="L83">                .map(existingEmployee -&gt; {</span>
+
+<span class="fc" id="L85">                  existingEmployee.setActive(Constants.INACTIVE_EMPLOYEE);</span>
+<span class="fc" id="L86">                  EmployeeCollection savedEmployee = employeeRepository.save(existingEmployee);</span>
+<span class="fc" id="L87">                  log.info(ConstantsLog.EMPLOYEE_SUCCESSFULLY_DELETED, savedEmployee.getId());</span>
+<span class="fc" id="L88">                  return savedEmployee;</span>
+
+<span class="fc" id="L90">                }).orElseThrow(() -&gt;</span>
+<span class="fc" id="L91">                    new EmployeeNotFoundException(ConstantsError.EMPLOYEE_NOT_FOUND)))</span>
+<span class="pc" id="L92">        .orElseThrow(() -&gt; new EmployeeException(ConstantsError.EMPLOYEE_ID_IS_REQUIRED));</span>
+<span class="fc" id="L93">  }</span>
+
+  /**
+   * {@inheritDoc}
+   *
+   * @param idEmployee      the id employee
+   * @param employeeRequest the employee request
+   * @return the employee response dto
+   */
+  @Override
+  public EmployeeResponseDto updateEmployee(String idEmployee, EmployeeRequestDto employeeRequest) {
+
+<span class="fc" id="L105">    Optional&lt;String&gt; validationError = validateEmployeeRequest(employeeRequest);</span>
+<span class="fc bfc" id="L106" title="All 2 branches covered.">    if (validationError.isPresent()) {</span>
+<span class="fc" id="L107">      String errorMsg = validationError.get();</span>
+<span class="fc" id="L108">      log.error(ConstantsLog.VALIDATION_ERROR_FOR_EMPLOYEE, employeeRequest, errorMsg);</span>
+<span class="fc" id="L109">      throw new EmployeeException(errorMsg);</span>
+    }
+
+<span class="fc" id="L112">    return Optional.of(idEmployee)</span>
+<span class="fc" id="L113">        .filter(validIdEmployee())</span>
+<span class="fc" id="L114">        .map(id -&gt; employeeRepository.findByIdAndActiveTrue(id)</span>
+<span class="fc" id="L115">            .map(existingEmployee -&gt; {</span>
+
+<span class="fc" id="L117">              EmployeeMapperUtil.mapRequestToEmployee(existingEmployee, employeeRequest);</span>
+<span class="fc" id="L118">              EmployeeCollection savedEmployee = employeeRepository.save(existingEmployee);</span>
+<span class="fc" id="L119">              log.info(ConstantsLog.EMPLOYEE_SUCCESSFULLY_UPDATED, savedEmployee.getId());</span>
+<span class="fc" id="L120">              return EmployeeMapperUtil.mapToEmployeeResponseDto(savedEmployee);</span>
+
+<span class="fc" id="L122">            }).orElseThrow(() -&gt; new EmployeeNotFoundException(ConstantsError.EMPLOYEE_NOT_FOUND)))</span>
+<span class="pc" id="L123">        .orElseThrow(() -&gt; new EmployeeException(ConstantsError.EMPLOYEE_ID_IS_REQUIRED));</span>
+  }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @param employees the employees
+   * @return the employee insert response dto
+   */
+  @Override
+  public EmployeeInsertResponseDto insertEmployees(List&lt;EmployeeRequestDto&gt; employees) {
+
+<span class="fc" id="L135">    List&lt;EmployeeRequestDto&gt; errors = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L136">    List&lt;EmployeeResponseDto&gt; success = employees.stream()</span>
+<span class="fc" id="L137">        .filter(requestDto -&gt; {</span>
+
+<span class="fc" id="L139">          Optional&lt;String&gt; validationError = validateEmployeeRequest(requestDto);</span>
+<span class="fc" id="L140">          validationError.ifPresent(errorMsg -&gt; {</span>
+<span class="fc" id="L141">            log.error(ConstantsLog.VALIDATION_ERROR_FOR_EMPLOYEE, requestDto, errorMsg);</span>
+<span class="fc" id="L142">            errors.add(</span>
+<span class="fc" id="L143">                EmployeeMapperUtil.mapEmployeeRequestDtoBuilder(requestDto).errorMessage(errorMsg)</span>
+<span class="fc" id="L144">                    .build());</span>
+<span class="fc" id="L145">          });</span>
+<span class="fc" id="L146">          return validationError.isEmpty();</span>
+
+        })
+<span class="fc" id="L149">        .map(requestDto -&gt; {</span>
+          try {
+<span class="fc" id="L151">            EmployeeCollection saved =</span>
+<span class="fc" id="L152">                employeeRepository.save(EmployeeMapperUtil.mapRequestToEmployee(requestDto));</span>
+<span class="fc" id="L153">            log.info(ConstantsLog.EMPLOYEE_SAVED_SUCCESSFULLY, saved.getId());</span>
+<span class="fc" id="L154">            return EmployeeMapperUtil.mapToEmployeeResponseDto(saved);</span>
+
+<span class="fc" id="L156">          } catch (Exception ex) {</span>
+<span class="fc" id="L157">            log.error(ConstantsLog.EXCEPTION_SAVING_EMPLOYEE, requestDto, ex.getMessage());</span>
+<span class="fc" id="L158">            errors.add(EmployeeMapperUtil.mapEmployeeRequestDtoBuilder(requestDto)</span>
+<span class="fc" id="L159">                .errorMessage(ex.getMessage()).build());</span>
+<span class="fc" id="L160">            return null;</span>
+          }
+        })
+<span class="fc" id="L163">        .filter(Objects::nonNull).toList();</span>
+
+<span class="fc" id="L165">    EmployeeInsertResponseDto response = EmployeeInsertResponseDto.builder()</span>
+<span class="fc" id="L166">        .success(success)</span>
+<span class="fc" id="L167">        .errors(errors)</span>
+<span class="fc" id="L168">        .build();</span>
+
+<span class="fc bfc" id="L170" title="All 2 branches covered.">    if (success.isEmpty()) {</span>
+<span class="fc" id="L171">      throw new EmployeeValidationException(</span>
+          ConstantsError.EMPLOYEE_DATA_VALIDATION_FAILED, response);
+    }
+
+<span class="fc" id="L175">    return response;</span>
+  }
+
+
+  /**
+   * Valid id employee predicate.
+   *
+   * @return the predicate
+   */
+  private Predicate&lt;String&gt; validIdEmployee() {
+<span class="pc bpc" id="L185" title="2 of 4 branches missed.">    return idEmployee -&gt; Objects.nonNull(idEmployee) &amp;&amp; !idEmployee.isBlank();</span>
+  }
+
+
+  /**
+   * Validate employee request optional.
+   *
+   * @param dto the dto
+   * @return the optional
+   */
+  private Optional&lt;String&gt; validateEmployeeRequest(EmployeeRequestDto dto) {
+
+<span class="fc" id="L197">    List&lt;String&gt; errors = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L198">    validateEmployeeAge(dto.birthDate())</span>
+<span class="fc" id="L199">        .ifPresent(err -&gt; errors.add(Constants.BIRTH_DATE + Constants.SEPARATOR_MSG + err));</span>
+
+<span class="fc" id="L201">    validator.validate(dto).stream()</span>
+<span class="fc" id="L202">        .map(v -&gt;</span>
+<span class="fc" id="L203">            v.getPropertyPath() + Constants.SEPARATOR_MSG + v.getMessage()</span>
+        )
+<span class="fc" id="L205">        .forEach(errors::add);</span>
+<span class="fc bfc" id="L206" title="All 2 branches covered.">    return errors.isEmpty()</span>
+<span class="fc" id="L207">        ? Optional.empty()</span>
+<span class="fc" id="L208">        : Optional.of(String.join(Constants.DELIMITER_MSG, errors));</span>
+
+  }
+
+  /**
+   * Validate employee age optional.
+   *
+   * @param birthDate the birthDate
+   * @return the optional
+   */
+  private Optional&lt;String&gt; validateEmployeeAge(LocalDate birthDate) {
+<span class="pc bpc" id="L219" title="1 of 2 branches missed.">    if (Objects.isNull(birthDate)) {</span>
+<span class="nc" id="L220">      return Optional.of(employeeProperties.getMessageErrorAgeValid());</span>
+    }
+
+<span class="fc" id="L223">    int age = Period.between(birthDate, LocalDate.now()).getYears();</span>
+<span class="pc bpc" id="L224" title="1 of 4 branches missed.">    if (age &lt; employeeProperties.getMinimumAge() || age &gt; employeeProperties.getMaximumAge()) {</span>
+<span class="fc" id="L225">      return Optional.of(employeeProperties.getMessageErrorAgeValid());</span>
+    }
+<span class="fc" id="L227">    return Optional.empty();</span>
+  }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
