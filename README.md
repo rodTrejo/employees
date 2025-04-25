@@ -74,9 +74,9 @@ La primera vez puede tardar varios minutos. Cuando termine, abre el archivo inde
 ```bash
 employees/target/site/index.html
 ```
-Puedes encontrar un ejemplo de la visualización del reporte en el archivo index.xml dentro de la misma carpeta site.
+Puedes encontrar un ejemplo de la visualización del reporte en el siguiente link.
 
-Reporte: [/site/index.html](https://github.com/rodTrejo/employees/blob/main/site/index.html)
+Reporte: [https://rodtrejo.github.io/employees/)
 
 ---
 
